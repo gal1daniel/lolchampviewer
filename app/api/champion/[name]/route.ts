@@ -3,6 +3,27 @@ import { NextResponse } from 'next/server';
 const DDRAGON_BASE_URL = 'https://ddragon.leagueoflegends.com/cdn';
 const DDRAGON_VERSION = '14.17.1';
 
+// Function to handle special cases and normalize champion names
+const normalizeChampionName = (name: string): string => {
+  const specialCases: { [key: string]: string } = {
+    'Bel\'Veth': 'Belveth',
+    'Cho\'Gath': 'Chogath',
+    'Kai\'Sa': 'Kaisa',
+    'Kha\'Zix': 'Khazix',
+    'Kog\'Maw': 'KogMaw',
+    'Rek\'Sai': 'RekSai',
+    'Vel\'Koz': 'Velkoz'
+  };
+
+  // Check if the name is a special case
+  if (specialCases[name]) {
+    return specialCases[name];
+  }
+
+  // Remove any non-alphanumeric characters and return
+  return name.replace(/[^a-zA-Z0-9]/g, '');
+};
+
 export async function GET(
   request: Request,
   { params }: { params: { name: string } }
@@ -13,15 +34,17 @@ export async function GET(
     return NextResponse.json({ error: 'Invalid champion name' }, { status: 400 });
   }
 
+  const normalizedChampionName = normalizeChampionName(championName);
+
   try {
-    const response = await fetch(`${DDRAGON_BASE_URL}/${DDRAGON_VERSION}/data/en_US/champion/${championName}.json`);
+    const response = await fetch(`${DDRAGON_BASE_URL}/${DDRAGON_VERSION}/data/en_US/champion/${normalizedChampionName}.json`);
     
     if (!response.ok) {
       throw new Error('Champion not found');
     }
 
     const data = await response.json();
-    const champion = data.data[championName];
+    const champion = data.data[normalizedChampionName];
 
     const championData = {
       name: champion.name,
