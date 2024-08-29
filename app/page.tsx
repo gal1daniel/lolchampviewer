@@ -15,7 +15,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-gradient-radial to-transparent via-neutral-950/80 from-neutral-950"></div>
       <div className="relative z-20 mx-auto px-4 py-8">
         <div className='flex justify-center flex-col items-center'>
-        <Image src={'/logo.svg'} alt="logo" width={200} height={200} />
+        <Image src={'/Logo.svg'} alt="logo" width={200} height={200} />
         <h1 className="text-4xl font-bold text-center my-8 text-white">League of Legends: <span className='text-main'>Champion Viewer</span></h1>
         </div>
         <ChampionSearch />
